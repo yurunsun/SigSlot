@@ -1,5 +1,9 @@
 #include <sigslot/sigslot.h>
 #include <iostream>
+#include <string>
+#include <unistd.h>
+
+#ifdef _SIGSLOT_MULTI_THREADED
 
 class Source {
 public:
@@ -11,7 +15,7 @@ public:
 	mutable sigslot::signal<sigslot::thread::mt> signal_zero;
 	mutable sigslot::signal<sigslot::thread::mt, bool> signal_bool;
 	
-	Source() = default;
+	Source() : m_toggle(true){}
 	Source(Source &) = delete;
 	Source(Source &&) = delete;
 
@@ -32,7 +36,7 @@ public:
 		signal_zero();
 	}
 private:
-	bool m_toggle{true};
+	bool m_toggle; //{true};
 };
 
 /*
@@ -150,3 +154,94 @@ int main() {
 
 	return 0;
 }
+
+#else
+
+using namespace sigslot;
+using namespace std;
+
+class tcp_client
+{
+public:
+    signal_type<>::sig connected;
+    signal_type<int, const string&>::sig error;
+    signal_type<const string&>::sig data;
+
+    void run()
+    {
+        while (1) {
+            connected();
+            sleep(1);
+            error(404, "host cannot be resolved!");
+            sleep(1);
+            data("channel 100");
+            sleep(3);
+        }
+    }
+};
+
+class vom_client : public has_slots<>
+{
+public:
+    signal_type<>::rep vom_connected;
+    signal_type<int, const string&>::rep vom_error;
+
+
+    vom_client()
+    {
+        c_.connected.connect(this, &vom_client::on_connected);
+        c_.error.connect(this, &vom_client::on_error);
+        c_.data.connect(this, &vom_client::on_data);
+
+        vom_connected.repeat(c_.connected);
+        vom_error.repeat(c_.error);
+    }
+    void run()
+    {
+        c_.run();
+    }
+    void on_connected()
+    {
+        cout << "vom_client on_connected" << endl;
+    }
+    void on_error(int ec, const string& em)
+    {
+        cout << "vom_client on_error ec:" << ec << " em:" << em << endl;
+    }
+    void on_data(const string& pkg)
+    {
+        cout << "vom_client on_data pkg:" << pkg << endl;
+    }
+
+private:
+    tcp_client c_;
+};
+
+class data_center : public has_slots<>
+{
+public:
+    void on_vom_connected()
+    {
+        cout << "data_center::on_vom_connected" << endl;
+    }
+    void on_vom_error(int ec, const string& em)
+    {
+        cout << "data_center::on_vom_error ec:" << ec << " em:" << em << endl;
+    }
+};
+
+int main(int argc, char* argv[])
+{
+    vom_client vc;
+    data_center db;
+
+    vc.vom_connected.connect(&db, &data_center::on_vom_connected);
+    vc.vom_error.connect(&db, &data_center::on_vom_error);
+
+    vc.run();
+
+    return 0;
+}
+
+
+#endif
