@@ -1,4 +1,4 @@
-#include <sigslot/sigslot.h>
+#include <sigslot.h>
 #include <iostream>
 #include <string>
 #include <unistd.h>

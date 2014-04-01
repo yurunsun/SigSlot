@@ -4,12 +4,12 @@
 
 TEMPLATE = app
 TARGET = test.exe
-DEPENDPATH += . sigslot
-INCLUDEPATH += . sigslot
+DEPENDPATH += . 
+INCLUDEPATH += . 
 CONFIG -= qt
 QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)
 QMAKE_CXXFLAGS += -std=c++0x
 
 # Input
-HEADERS += sigslot/sigslot.h
+HEADERS += sigslot.h
 SOURCES += test.cc
