@@ -3,13 +3,23 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = test.exe
 DEPENDPATH += . 
 INCLUDEPATH += . 
 CONFIG -= qt
 QMAKE_CLEAN += $(TARGET) $(QMAKE_TARGET)
 QMAKE_CXXFLAGS += -std=c++0x
+OBJECTS_DIR = .objs
+
+SIGSLOT {
+	TARGET = test_sigslot.exe
+	HEADERS += sigslot.h
+	SOURCES += test_sigslot.cpp
+}
+EVENT {
+	TARGET = test_event.exe
+	HEADERS += event.h
+	SOURCES += test_event.cpp
+}
 
 # Input
-HEADERS += sigslot.h
-SOURCES += test.cc
+

@@ -1,17 +1,15 @@
 #sigslot - C++11 Signal/Slot library
 
-##1. Originally written by [Sarah Thompson](http://sigslot.sourceforge.net/).
+##1. How to compile
 
-##2. C++11-erization by Dave Cridland:
+	qmake *.pro CONFIG+=SIGSLOT
+	qmake *.pro CONFIG+=EVENT
 
-##3. See test.cc for some documentation and a walk-through example.
+##2. History
 
-##4. This is public domain; no copyright is claimed or asserted.
-
-##5. No warranty is implied or offered either.
-
-##6. Add repeater. Use std::lock instead of platform specific locks.
-
-##7. Add event library. 
-Signal producer and consumer do not need to know each other. See test_event.cpp
++ Originally written by [Sarah Thompson](http://sigslot.sourceforge.net/).
++ C++11-erization by Dave Cridland:
++ This is public domain; no copyright is claimed or asserted. No warranty is implied or offered either.
++ Add repeater. Use std::lock instead of platform specific locks. By yurunsun@gmail.com
++ Signal producer and consumer do not need to know each other. See `test_event.cpp`. By everwanna@gmail.com
 
