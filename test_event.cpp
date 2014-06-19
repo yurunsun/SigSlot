@@ -25,8 +25,8 @@ int main(int argc, char ** argv)
 
     event_listener listener;
 
-    sigslot::event_sink<TEST_EVENT, bool> sink0(std::bind(got_bool, std::placeholders::_1));
-    sigslot::event_sink<TEST_EVENT, bool> sink1(std::bind(&event_listener::update, &listener, std::placeholders::_1));
+    sigslot::event_sink<uint32_t, bool> sink0(TEST_EVENT, std::bind(got_bool, std::placeholders::_1));
+    sigslot::event_sink<uint32_t, bool> sink1(TEST_EVENT, std::bind(&event_listener::update, &listener, std::placeholders::_1));
 
-    sigslot::event_publisher<TEST_EVENT>::publish(true);
+    sigslot::event_publisher<uint32_t>::publish(TEST_EVENT, true);
 }
